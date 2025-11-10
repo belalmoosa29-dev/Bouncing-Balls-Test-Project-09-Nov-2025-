@@ -214,6 +214,65 @@
       margin-top: 16px;
       position: relative;
     }
+    .birthday {
+      margin: 12px 0 24px;
+      padding: 18px 22px;
+      display: grid;
+      grid-template-columns: 180px 1fr;
+      align-items: center;
+      gap: 26px;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 14px;
+      background: rgba(12, 0, 28, 0.68);
+      box-shadow: inset 0 0 20px rgba(0, 255, 213, 0.12);
+      position: relative;
+      overflow: hidden;
+    }
+    .birthday::before {
+      content: "";
+      position: absolute;
+      inset: -30%;
+      background: conic-gradient(from 90deg, rgba(0, 255, 213, 0.12), rgba(255, 61, 253, 0.18), rgba(0, 255, 213, 0.12));
+      filter: blur(60px);
+      opacity: 0.75;
+      z-index: 0;
+      animation: swirl 24s linear infinite;
+    }
+    .birthday-photo {
+      position: relative;
+      z-index: 1;
+      width: 180px;
+      height: 180px;
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.45), 0 0 26px rgba(0, 255, 213, 0.35);
+    }
+    .birthday-photo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .birthday-message {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      gap: 10px;
+    }
+    .birthday-message h2 {
+      margin: 0;
+      font-size: 1.6rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: rgba(0, 255, 213, 0.92);
+      text-shadow: 0 0 18px rgba(0, 255, 213, 0.65);
+    }
+    .birthday-message p {
+      margin: 0;
+      font-size: 0.9rem;
+      letter-spacing: 0.08em;
+      line-height: 1.5;
+      color: rgba(228, 240, 255, 0.85);
+    }
     .module {
       position: relative;
       padding: 16px 20px;
@@ -345,6 +404,14 @@
         width: 92vw;
         height: 88vh;
       }
+      .birthday {
+        grid-template-columns: 1fr;
+        justify-items: center;
+        text-align: center;
+      }
+      .birthday-message h2 {
+        letter-spacing: 0.18em;
+      }
       .panel {
         grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: 14px;
@@ -359,6 +426,9 @@
     @media (max-width: 640px) {
       nav {
         display: none;
+      }
+      .birthday {
+        padding: 16px;
       }
       .panel {
         grid-template-columns: 1fr;
@@ -400,6 +470,19 @@
         <span>vhs sync ok</span>
       </div>
     </main>
+
+    <section class="birthday">
+      <div class="birthday-photo">
+        <img src="assets/bilal-birthday.jpg" alt="Portrait of Bilal Moosa" />
+      </div>
+      <div class="birthday-message">
+        <h2>Happy Birthday Wishes</h2>
+        <p>
+          Celebrating Bilal Moosa’s relentless creativity, fearless leadership, and retro-fueled passion for animation.
+          May the next orbit around the sun deliver even more legendary frames and unforgettable stories.
+        </p>
+      </div>
+    </section>
 
     <section class="panel">
       <article class="module" data-module="homeworld">
