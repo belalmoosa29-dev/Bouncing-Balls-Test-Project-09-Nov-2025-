@@ -2,772 +2,283 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Retro Animation Nexus</title>
+  <title>Retro Bouncing Balls</title>
   <style>
-    :root {
-      --bg1: #050014;
-      --bg2: #120035;
-      --accent: #ff3dfd;
-      --glow: #00ffd5;
-      --text: #e4f0ff;
-      --scanline: rgba(255, 255, 255, 0.05);
-      font-family: "Verdana", "Lucida Console", Tahoma, sans-serif;
-    }
-    * {
-      box-sizing: border-box;
-    }
-    html, body {
-      margin: 0;
-      height: 100%;
-      overflow: hidden;
-      color: var(--text);
-      background: radial-gradient(circle at 20% 20%, #2d0061, var(--bg1));
-    }
     body {
+      margin: 0;
       display: flex;
       align-items: center;
       justify-content: center;
-      position: relative;
-      letter-spacing: 0.04em;
+      height: 100vh;
+      background: radial-gradient(circle at 20% 20%, #050014, #000);
+      color: #f0f6ff;
+      font-family: "Trebuchet MS", Arial, sans-serif;
     }
-    body::before {
-      content: "";
-      position: absolute;
-      inset: -20%;
-      background: conic-gradient(from 45deg, rgba(0, 255, 255, 0.05), rgba(255, 0, 255, 0.12), rgba(0, 255, 255, 0.05));
-      animation: swirl 20s linear infinite;
-      filter: blur(120px);
-      z-index: 0;
+    canvas {
+      border: 4px solid rgba(0, 255, 213, 0.7);
+      border-radius: 18px;
+      background: linear-gradient(160deg, rgba(10, 0, 30, 0.95), rgba(0, 0, 0, 0.9));
+      box-shadow: 0 18px 36px rgba(0, 0, 0, 0.6), 0 0 28px rgba(0, 255, 213, 0.35);
     }
-    body::after {
-      content: "";
+    .message {
       position: absolute;
-      inset: 0;
-      background-image: linear-gradient(var(--scanline) 0.5px, transparent 0.5px);
-      background-size: 100% 3px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 12px 26px;
+      border-radius: 999px;
+      background: rgba(0, 255, 213, 0.16);
+      border: 1px solid rgba(0, 255, 213, 0.4);
+      box-shadow: 0 0 18px rgba(0, 255, 213, 0.45);
+      font-weight: 700;
+      font-size: 1.05rem;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.92);
+      pointer-events: none;
       mix-blend-mode: screen;
-      opacity: 0.35;
-      z-index: 1;
-      pointer-events: none;
     }
-    @keyframes swirl {
-      to {
-        transform: rotate(360deg);
-      }
-    }
-    .grid-overlay {
+    .badge {
       position: absolute;
-      inset: -50%;
-      background-image: linear-gradient(rgba(0, 255, 255, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 0, 170, 0.07) 1px, transparent 1px);
-      background-size: 120px 120px;
-      transform: perspective(900px) rotateX(72deg) translateY(120px);
-      animation: grid-scroll 12s linear infinite;
-      opacity: 0.4;
-      z-index: 1;
-    }
-    @keyframes grid-scroll {
-      from {
-        background-position: 0 0, 0 0;
-      }
-      to {
-        background-position: 0 120px, 120px 0;
-      }
-    }
-    .frame {
-      position: relative;
-      z-index: 2;
-      width: min(960px, 90vw);
-      height: min(560px, 80vh);
-      padding: 32px 48px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      border: 4px solid rgba(255, 255, 255, 0.2);
-      border-radius: 18px;
-      background: linear-gradient(135deg, rgba(10, 0, 30, 0.9), rgba(17, 0, 40, 0.68));
-      box-shadow: 0 16px 60px rgba(0, 0, 0, 0.6), inset 0 0 35px rgba(255, 108, 255, 0.15);
-      overflow: hidden;
-    }
-    header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      text-transform: uppercase;
-      font-size: 0.78rem;
-    }
-    .logo {
-      font-size: 1.6rem;
-      font-weight: 700;
+      top: 30px;
       letter-spacing: 0.2em;
-      color: var(--glow);
-      text-shadow: 0 0 12px rgba(0, 255, 213, 0.8), 0 0 30px rgba(0, 255, 213, 0.4);
-    }
-    .logo span {
-      color: var(--accent);
-      text-shadow: 0 0 14px rgba(255, 61, 253, 0.8);
-    }
-    nav {
-      position: relative;
-      display: flex;
-      gap: 24px;
-      color: rgba(228, 240, 255, 0.8);
-    }
-    nav span {
-      cursor: pointer;
-      position: relative;
-      padding-bottom: 4px;
-    }
-    nav span::after {
-      content: "";
-      position: absolute;
-      left: 0;
-      bottom: 0;
-      width: 100%;
-      height: 2px;
-      background: rgba(255, 61, 253, 0.6);
-      transform: scaleX(0);
-      transform-origin: right;
-      transition: transform 0.4s ease;
-    }
-    nav span:hover::after {
-      transform: scaleX(1);
-      transform-origin: left;
-    }
-    .hero {
       text-transform: uppercase;
-      letter-spacing: 0.28em;
-      font-size: 0.78rem;
-      display: grid;
-      gap: 18px;
-    }
-    .hero h1 {
-      font-size: clamp(2.8rem, 3.6vw, 3.6rem);
-      font-weight: 900;
-      margin: 0;
-      letter-spacing: 0.22em;
-      text-shadow: 0 0 24px rgba(255, 61, 253, 0.7), 0 0 46px rgba(0, 255, 213, 0.4);
-      line-height: 1.05;
-    }
-    .hero p {
-      max-width: 90%;
-      text-transform: none;
-      letter-spacing: 0.06em;
-      font-size: 1rem;
-      color: rgba(228, 240, 255, 0.82);
-    }
-    .cta-row {
-      display: flex;
-      align-items: center;
-      gap: 24px;
-    }
-    .cta-button {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      padding: 16px 40px;
-      background: linear-gradient(120deg, rgba(0, 255, 213, 0.9), rgba(255, 61, 253, 0.85));
-      border-radius: 28px;
-      color: #050014;
-      font-weight: 700;
-      letter-spacing: 0.18em;
-      box-shadow: 0 12px 40px rgba(0, 255, 213, 0.45);
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-      text-decoration: none;
-    }
-    .cta-button:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 16px 60px rgba(255, 61, 253, 0.45);
-    }
-    .sequence {
-      display: inline-flex;
-      align-items: center;
-      gap: 12px;
-      font-size: 0.85rem;
-      font-weight: 600;
-      letter-spacing: 0.26em;
-      color: rgba(0, 255, 213, 0.9);
-    }
-    .sequence::before {
-      content: "▶";
-      font-size: 1rem;
-    }
-    .ticker {
-      display: flex;
-      gap: 10px;
-      font-size: 0.7rem;
-      letter-spacing: 0.3em;
-      color: rgba(255, 255, 255, 0.6);
-      text-transform: uppercase;
-    }
-    .ticker span {
-      animation: blink 1.4s steps(2, start) infinite;
-    }
-    @keyframes blink {
-      50% {
-        opacity: 0.2;
-      }
-    }
-    .panel {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 18px;
-      margin-top: 16px;
-      position: relative;
-    }
-    .birthday {
-      margin: 12px 0 24px;
-      padding: 18px 22px;
-      display: grid;
-      grid-template-columns: 180px 1fr;
-      align-items: center;
-      gap: 26px;
-      border: 1px solid rgba(255, 255, 255, 0.18);
-      border-radius: 14px;
-      background: rgba(12, 0, 28, 0.68);
-      box-shadow: inset 0 0 20px rgba(0, 255, 213, 0.12);
-      position: relative;
-      overflow: hidden;
-    }
-    .birthday::before {
-      content: "";
-      position: absolute;
-      inset: -30%;
-      background: conic-gradient(from 90deg, rgba(0, 255, 213, 0.12), rgba(255, 61, 253, 0.18), rgba(0, 255, 213, 0.12));
-      filter: blur(60px);
-      opacity: 0.75;
-      z-index: 0;
-      animation: swirl 24s linear infinite;
-    }
-    .birthday-photo {
-      position: relative;
-      z-index: 1;
-      width: 180px;
-      height: 180px;
-      border-radius: 18px;
-      overflow: hidden;
-      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.45), 0 0 26px rgba(0, 255, 213, 0.35);
-    }
-    .birthday-photo img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-    .birthday-message {
-      position: relative;
-      z-index: 1;
-      display: grid;
-      gap: 10px;
-    }
-    .birthday-message h2 {
-      margin: 0;
-      font-size: 1.6rem;
-      letter-spacing: 0.3em;
-      text-transform: uppercase;
-      color: rgba(0, 255, 213, 0.92);
-      text-shadow: 0 0 18px rgba(0, 255, 213, 0.65);
-    }
-    .birthday-message p {
-      margin: 0;
-      font-size: 0.9rem;
-      letter-spacing: 0.08em;
-      line-height: 1.5;
-      color: rgba(228, 240, 255, 0.85);
-    }
-    .module {
-      position: relative;
-      padding: 16px 20px;
-      border: 1px solid rgba(255, 255, 255, 0.18);
-      border-radius: 12px;
-      background: rgba(8, 0, 26, 0.5);
-      box-shadow: inset 0 0 18px rgba(0, 255, 213, 0.08);
-      overflow: hidden;
-    }
-    .module h3 {
-      margin: 0 0 12px;
-      font-size: 0.7rem;
-      letter-spacing: 0.3em;
-      color: rgba(255, 61, 253, 0.8);
-    }
-    .module p {
-      margin: 0;
       font-size: 0.75rem;
-      letter-spacing: 0.08em;
-      line-height: 1.4;
-      position: relative;
-      z-index: 2;
-    }
-    .module .meter {
-      position: relative;
-      margin-top: 16px;
-      height: 6px;
-      border-radius: 16px;
-      background: rgba(255, 255, 255, 0.08);
-      overflow: hidden;
-    }
-    .module .meter::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(90deg, rgba(0, 255, 213, 0.8), rgba(255, 61, 253, 0.9));
-      animation: pulse 2.6s ease-in-out infinite;
-      transform-origin: left;
-    }
-    .module canvas,
-    .module svg,
-    .module .module-animation {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 1;
-      pointer-events: none;
-      opacity: 0;
-      transform: scale(1.05);
-      transition: opacity 0.6s ease, transform 0.6s ease;
-    }
-    .module.active canvas,
-    .module.active svg,
-    .module.active .module-animation {
-      opacity: 0.45;
-      transform: scale(1);
-    }
-    .module.active {
-      box-shadow: inset 0 0 28px rgba(255, 61, 253, 0.25), 0 0 24px rgba(0, 255, 213, 0.45);
-    }
-    footer {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 0.68rem;
-      letter-spacing: 0.2em;
-      color: rgba(255, 255, 255, 0.6);
-      text-transform: uppercase;
-    }
-    .cassette {
-      position: relative;
-      width: 180px;
-      height: 60px;
-      border-radius: 10px;
-      border: 2px solid rgba(255, 255, 255, 0.2);
-      display: grid;
-      grid-template-columns: 40px 1fr 40px;
-      align-items: center;
-      padding: 10px;
-      gap: 10px;
-      background: linear-gradient(120deg, rgba(15, 0, 40, 0.7), rgba(70, 0, 90, 0.4));
-    }
-    .cassette::before,
-    .cassette::after {
-      content: "";
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-      border: 2px solid rgba(0, 255, 213, 0.8);
-      animation: spin 6s linear infinite;
-    }
-    @keyframes spin {
-      to {
-        transform: rotate(360deg);
-      }
-    }
-    .cassette span {
-      font-size: 0.6rem;
-      letter-spacing: 0.32em;
-      color: rgba(255, 255, 255, 0.7);
-    }
-    .status {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-    .status-dot {
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      background: rgba(0, 255, 213, 0.6);
-      box-shadow: 0 0 12px rgba(0, 255, 213, 0.9);
-      animation: heartbeat 1.2s ease-in-out infinite;
-    }
-    @keyframes heartbeat {
-      0%, 100% {
-        transform: scale(0.8);
-        opacity: 0.7;
-      }
-      50% {
-        transform: scale(1.2);
-        opacity: 1;
-      }
-    }
-    @media (max-width: 840px) {
-      .frame {
-        padding: 26px;
-        width: 92vw;
-        height: 88vh;
-      }
-      .birthday {
-        grid-template-columns: 1fr;
-        justify-items: center;
-        text-align: center;
-      }
-      .birthday-message h2 {
-        letter-spacing: 0.18em;
-      }
-      .panel {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 14px;
-      }
-      .hero h1 {
-        letter-spacing: 0.16em;
-      }
-      .cassette {
-        display: none;
-      }
-    }
-    @media (max-width: 640px) {
-      nav {
-        display: none;
-      }
-      .birthday {
-        padding: 16px;
-      }
-      .panel {
-        grid-template-columns: 1fr;
-      }
-      .hero p {
-        max-width: 100%;
-      }
+      color: rgba(0, 255, 213, 0.75);
     }
   </style>
 </head>
 <body>
-  <div class="grid-overlay"></div>
-  <section class="frame">
-    <header>
-      <div class="logo">ECHO<span>FLASH</span></div>
-      <nav>
-        <span data-tab="homeworld">homeworld</span>
-        <span data-tab="demo">demo reel</span>
-        <span data-tab="source">source code</span>
-        <span data-tab="contact">contact</span>
-      </nav>
-    </header>
-
-    <main class="hero">
-      <h1 data-flicker>Resurrecting The Future Of Motion</h1>
-      <p>
-        Broadcast-ready loops, glitch-synced transitions, and vector particle storms forged in pure ActionScript
-        nostalgia. We are the renegades of the timeline, animating like it is 2001… again.
-      </p>
-      <div class="cta-row">
-        <a class="cta-button" href="#">launch the portal</a>
-        <div class="sequence">
-          <span id="sequence-text">buffering intro...</span>
-        </div>
-      </div>
-      <div class="ticker">
-        <span>render queue</span>
-        <span>hyperjump ready</span>
-        <span>vhs sync ok</span>
-      </div>
-    </main>
-
-    <section class="birthday">
-      <div class="birthday-photo">
-        <img src="assets/bilal-birthday.jpg" alt="Portrait of Bilal Moosa" />
-      </div>
-      <div class="birthday-message">
-        <h2>Happy Birthday Wishes</h2>
-        <p>
-          Celebrating Bilal Moosa’s relentless creativity, fearless leadership, and retro-fueled passion for animation.
-          May the next orbit around the sun deliver even more legendary frames and unforgettable stories.
-        </p>
-      </div>
-    </section>
-
-    <section class="panel">
-      <article class="module" data-module="homeworld">
-        <h3>loop library</h3>
-        <p>
-          More than 128 looping intros captured straight from archival flash drives. Re-mastered with CRT grit and neon haze.
-        </p>
-        <div class="meter"></div>
-        <canvas class="module-animation" width="320" height="180"></canvas>
-      </article>
-      <article class="module" data-module="demo">
-        <h3>vector lab</h3>
-        <p>
-          Fractal flames, bezier comets, shape tween sorcery. Export ready for newgrounds, xp themes, and holographic billboards.
-        </p>
-        <div class="meter"></div>
-        <svg class="module-animation" viewBox="0 0 320 180" preserveAspectRatio="none">
-          <defs>
-            <linearGradient id="beam" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stop-color="rgba(0,255,213,0)" />
-              <stop offset="50%" stop-color="rgba(255,61,253,0.7)" />
-              <stop offset="100%" stop-color="rgba(0,255,213,0)" />
-            </linearGradient>
-          </defs>
-          <g stroke="url(#beam)" stroke-width="2">
-            <polyline id="beam-path" fill="none" points="0,90 40,60 80,120 120,50 160,140 200,40 240,130 280,70 320,90"></polyline>
-          </g>
-        </svg>
-      </article>
-      <article class="module" data-module="source">
-        <h3>sound reactor</h3>
-        <p>
-          Syncs your MIDI, WAV, or 128kbps MP3 to frame-perfect keyframes. Watch the waveform animate like it owes you rent.
-        </p>
-        <div class="meter"></div>
-        <div class="module-animation" data-grid></div>
-      </article>
-      <article class="module" data-module="contact">
-        <h3>transmission uplink</h3>
-        <p>
-          Beam your message over dial-up soundwaves. Our pager listens 24/7 for cosmic collaborations and easter egg trades.
-        </p>
-        <div class="meter"></div>
-        <div class="module-animation" data-orbital></div>
-      </article>
-    </section>
-
-    <footer>
-      <div class="status">
-        <span class="status-dot"></span>
-        <span>status: broadcasting in glorious 640x480</span>
-      </div>
-      <div class="cassette">
-        <span>cyber mixtape v5</span>
-      </div>
-      <div>copyright © MMXXV echo flash collective</div>
-    </footer>
-  </section>
-
+  <div class="badge">five-ball retro collider</div>
+  <div class="message" id="birthday">Happy Anniversary to Ranjit</div>
+  <canvas id="playfield" width="900" height="520"></canvas>
   <script>
-    const sequences = [
-      "buffering intro...",
-      "loading vector sprites...",
-      "spinning up timeline...",
-      "render nodes online...",
-      "welcome to echo flash."
-    ];
-    let sequenceIndex = 0;
-    const sequenceTarget = document.getElementById("sequence-text");
+    const canvas = document.getElementById("playfield");
+    const ctx = canvas.getContext("2d");
 
-    function rollSequence() {
-      sequenceTarget.textContent = sequences[sequenceIndex];
-      sequenceIndex = (sequenceIndex + 1) % sequences.length;
-      setTimeout(rollSequence, 2200);
-    }
-    setTimeout(rollSequence, 1200);
-
-    const flickerTargets = document.querySelectorAll("[data-flicker]");
-    flickerTargets.forEach(target => {
-      const flicker = () => {
-        target.style.opacity = Math.random() > 0.92 ? 0.6 : 1;
-        requestAnimationFrame(flicker);
-      };
-      flicker();
-    });
-
-    const modules = document.querySelectorAll(".module");
-    const tabs = document.querySelectorAll("nav span[data-tab]");
-
-    tabs.forEach(tab => {
-      tab.addEventListener("click", () => {
-        const targetModule = tab.getAttribute("data-tab");
-        modules.forEach(module => {
-          module.classList.toggle("active", module.dataset.module === targetModule);
-        });
-        tabs.forEach(t => t.classList.toggle("active", t === tab));
-        runAnimation(targetModule);
-      });
-    });
-
-    function runAnimation(type) {
-      switch (type) {
-        case "homeworld":
-          animateHomeworld();
-          break;
-        case "demo":
-          animateDemo();
-          break;
-        case "source":
-          animateSource();
-          break;
-        case "contact":
-          animateContact();
-          break;
-        default:
-          break;
+    class Ball {
+      constructor({ x, y, radius, color, vx, vy, shape = "circle" }) {
+        Object.assign(this, { x, y, radius, color, vx, vy, shape });
+        this.mass = radius * radius;
       }
-    }
+      update(bounds, dt) {
+        this.x += this.vx * dt;
+        this.y += this.vy * dt;
 
-    function animateHomeworld() {
-      const module = document.querySelector('.module[data-module="homeworld"]');
-      const canvas = module.querySelector("canvas");
-      if (!canvas) {
-        return;
+        if (this.x - this.radius < 0) {
+          this.x = this.radius;
+          this.vx *= -1;
+        } else if (this.x + this.radius > bounds.width) {
+          this.x = bounds.width - this.radius;
+          this.vx *= -1;
+        }
+
+        if (this.y - this.radius < 0) {
+          this.y = this.radius;
+          this.vy *= -1;
+        } else if (this.y + this.radius > bounds.height) {
+          this.y = bounds.height - this.radius;
+          this.vy *= -1;
+        }
       }
-      const ctx = canvas.getContext("2d");
-      const width = canvas.width;
-      const height = canvas.height;
-      const stars = Array.from({ length: 48 }, () => ({
-        x: Math.random() * width,
-        y: Math.random() * height,
-        z: Math.random() * 0.9 + 0.1,
-        speed: Math.random() * 0.8 + 0.4,
-        hue: 160 + Math.random() * 120,
-      }));
-
-      let frame = 0;
-
-      function render() {
-        if (!module.classList.contains("active")) {
+      draw(ctx) {
+        if (this.shape === "diamond") {
+          ctx.save();
+          ctx.translate(this.x, this.y);
+          ctx.rotate(Math.PI / 4);
+          const side = this.radius * Math.sqrt(2);
+          ctx.fillStyle = this.color;
+          ctx.fillRect(-side, -side, side * 2, side * 2);
+          ctx.restore();
           return;
         }
-        frame += 1;
-        ctx.clearRect(0, 0, width, height);
-        stars.forEach(star => {
-          star.y += star.speed * star.z * 2;
-          if (star.y > height) {
-            star.y = -4;
-            star.x = Math.random() * width;
-            star.z = Math.random() * 0.9 + 0.1;
+
+        if (this.shape === "baseball") {
+          ctx.save();
+          ctx.translate(this.x, this.y);
+          ctx.beginPath();
+          ctx.fillStyle = "#fff";
+          ctx.arc(0, 0, this.radius, 0, Math.PI * 2);
+          ctx.fill();
+
+          ctx.strokeStyle = "#d22";
+          ctx.lineWidth = Math.max(1.4, this.radius * 0.12);
+          const seamOffset = this.radius * 0.65;
+
+          ctx.beginPath();
+          ctx.arc(-seamOffset * 0.55, 0, this.radius * 0.85, -Math.PI / 2, Math.PI / 2);
+          ctx.stroke();
+
+          ctx.beginPath();
+          ctx.arc(seamOffset * 0.55, 0, this.radius * 0.85, Math.PI / 2, -Math.PI / 2);
+          ctx.stroke();
+
+          ctx.lineWidth = Math.max(1, this.radius * 0.08);
+          const stitches = 6;
+          for (let i = 0; i < stitches; i += 1) {
+            const angle = (i / (stitches - 1)) * Math.PI - Math.PI / 2;
+            const x = -seamOffset * 0.55 + Math.cos(angle) * this.radius * 0.85;
+            const y = Math.sin(angle) * this.radius * 0.85;
+            ctx.beginPath();
+            ctx.moveTo(x - this.radius * 0.18, y - this.radius * 0.04);
+            ctx.lineTo(x + this.radius * 0.18, y + this.radius * 0.04);
+            ctx.stroke();
+
+            const x2 = seamOffset * 0.55 - Math.cos(angle) * this.radius * 0.85;
+            const y2 = Math.sin(angle) * this.radius * 0.85;
+            ctx.beginPath();
+            ctx.moveTo(x2 - this.radius * 0.18, y2 + this.radius * 0.04);
+            ctx.lineTo(x2 + this.radius * 0.18, y2 - this.radius * 0.04);
+            ctx.stroke();
           }
-          const size = (1 - star.z) * 3 + 1;
-          ctx.fillStyle = `hsla(${star.hue}, 90%, 70%, ${0.6 + 0.3 * Math.sin(frame * 0.05 + star.x)})`;
-          ctx.fillRect(star.x, star.y, size, size);
-        });
-        requestAnimationFrame(render);
-      }
-      render();
-    }
-
-    function animateDemo() {
-      const module = document.querySelector('.module[data-module="demo"]');
-      const path = module.querySelector("#beam-path");
-      if (!path) {
-        return;
-      }
-      let offset = 0;
-
-      function warp() {
-        if (!module.classList.contains("active")) {
-          return;
-        }
-        offset = (offset + 2) % 60;
-        path.setAttribute("stroke-dasharray", "18 18");
-        path.setAttribute("stroke-dashoffset", offset.toString());
-        const wave = [];
-        for (let x = 0; x <= 320; x += 20) {
-          const y = 90 + Math.sin((x + offset * 4) * 0.045) * 45 + Math.sin((x + offset * 9) * 0.02) * 22;
-          wave.push(`${x},${y}`);
-        }
-        path.setAttribute("points", wave.join(" "));
-        requestAnimationFrame(warp);
-      }
-      warp();
-    }
-
-    function animateSource() {
-      const module = document.querySelector('.module[data-module="source"]');
-      const container = module.querySelector("[data-grid]");
-      if (!container) {
+        ctx.restore();
         return;
       }
 
-      const columns = 14;
-      const rows = 7;
-      container.innerHTML = "";
-      const fragments = document.createDocumentFragment();
-      for (let y = 0; y < rows; y += 1) {
-        for (let x = 0; x < columns; x += 1) {
-          const cell = document.createElement("span");
-          cell.style.position = "absolute";
-          cell.style.width = `${100 / columns}%`;
-          cell.style.height = `${100 / rows}%`;
-          cell.style.left = `${(x / columns) * 100}%`;
-          cell.style.top = `${(y / rows) * 100}%`;
-          cell.style.background = `rgba(0, 255, 213, ${0.05 + Math.random() * 0.12})`;
-          cell.style.transition = "background 0.4s ease, transform 0.4s ease";
-          fragments.appendChild(cell);
-        }
-      }
-      container.appendChild(fragments);
+      if (this.shape === "portrait") {
+        ctx.save();
+        ctx.translate(this.x, this.y);
+        ctx.beginPath();
+        ctx.arc(0, 0, this.radius, 0, Math.PI * 2);
+        ctx.closePath();
 
-      function pulse() {
-        if (!module.classList.contains("active")) {
+        if (Ball.portrait.complete && Ball.portrait.naturalWidth) {
+          ctx.clip();
+          ctx.drawImage(Ball.portrait, -this.radius, -this.radius, this.radius * 2, this.radius * 2);
+        } else {
+          ctx.fillStyle = "#ffffff";
+          ctx.fill();
+        }
+        ctx.restore();
           return;
         }
-        Array.from(container.children).forEach((cell, index) => {
-          const phase = (Date.now() * 0.002 + index * 0.3) % (Math.PI * 2);
-          const intensity = (Math.sin(phase) + 1) / 2;
-          cell.style.background = `rgba(255, 61, 253, ${0.05 + intensity * 0.35})`;
-          cell.style.transform = `scale(${0.96 + intensity * 0.12})`;
-        });
-        requestAnimationFrame(pulse);
-      }
-      pulse();
-    }
 
-    function animateContact() {
-      const module = document.querySelector('.module[data-module="contact"]');
-      const orbital = module.querySelector("[data-orbital]");
-      if (!orbital) {
+      if (this.shape === "logo") {
+        ctx.save();
+        ctx.translate(this.x, this.y);
+        const logoWidth = this.radius * 1.4;
+        const logoHeight = this.radius * 0.9;
+        if (Ball.logo.complete && Ball.logo.naturalWidth) {
+          ctx.fillStyle = "#ffffff";
+          ctx.fillRect(-logoWidth, -logoHeight, logoWidth * 2, logoHeight * 2);
+          ctx.drawImage(Ball.logo, -logoWidth, -logoHeight, logoWidth * 2, logoHeight * 2);
+        } else {
+          ctx.fillStyle = "#004f9e";
+          ctx.fillRect(-logoWidth, -logoHeight, logoWidth * 2, logoHeight * 2);
+        }
+        ctx.restore();
         return;
       }
 
-      orbital.innerHTML = "";
-      const center = document.createElement("div");
-      center.style.position = "absolute";
-      center.style.left = "50%";
-      center.style.top = "50%";
-      center.style.width = "14px";
-      center.style.height = "14px";
-      center.style.margin = "-7px 0 0 -7px";
-      center.style.borderRadius = "50%";
-      center.style.background = "rgba(255, 61, 253, 0.9)";
-      center.style.boxShadow = "0 0 18px rgba(255, 61, 253, 0.8)";
-      orbital.appendChild(center);
-
-      const satellites = 6;
-      const layers = [];
-      for (let i = 0; i < satellites; i += 1) {
-        const dot = document.createElement("div");
-        dot.style.position = "absolute";
-        dot.style.left = "50%";
-        dot.style.top = "50%";
-        dot.style.width = "10px";
-        dot.style.height = "10px";
-        dot.style.margin = "-5px 0 0 -5px";
-        dot.style.borderRadius = "50%";
-        dot.style.background = "rgba(0, 255, 213, 0.8)";
-        dot.style.boxShadow = "0 0 14px rgba(0, 255, 213, 0.8)";
-        orbital.appendChild(dot);
-        layers.push(dot);
+        ctx.beginPath();
+        ctx.fillStyle = this.color;
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        ctx.fill();
       }
-
-      let tick = 0;
-      function orbit() {
-        if (!module.classList.contains("active")) {
-          return;
-        }
-        tick += 0.02;
-        layers.forEach((dot, index) => {
-          const radius = 35 + index * 10 + Math.sin(tick * 0.8 + index) * 6;
-          const angle = tick * (0.6 + index * 0.08) + index;
-          dot.style.transform = `translate(${Math.cos(angle) * radius}px, ${Math.sin(angle) * radius * 0.5}px)`;
-          dot.style.opacity = 0.5 + Math.sin(tick * 1.3 + index) * 0.35;
-        });
-        requestAnimationFrame(orbit);
-      }
-      orbit();
     }
 
-    runAnimation("homeworld");
-    modules.forEach(module => module.classList.toggle("active", module.dataset.module === "homeworld"));
-    tabs.forEach(tab => tab.classList.toggle("active", tab.dataset.tab === "homeworld"));
+    Ball.portrait = new Image();
+    Ball.portrait.src = "assets/bilal-birthday.jpeg";
+    Ball.logo = new Image();
+    Ball.logo.src = "assets/berkeley-logo.png";
+
+    function resolveBallCollision(a, b) {
+      const dx = b.x - a.x;
+      const dy = b.y - a.y;
+      const minDistance = a.radius + b.radius;
+      const distanceSq = dx * dx + dy * dy;
+      if (distanceSq >= minDistance * minDistance) {
+        return;
+      }
+
+      const distance = Math.sqrt(distanceSq) || minDistance;
+      const nx = dx / distance;
+      const ny = dy / distance;
+      const overlap = minDistance - distance;
+
+      if (overlap > 0) {
+        const totalMass = a.mass + b.mass;
+        const correction = overlap / totalMass;
+        a.x -= nx * correction * b.mass;
+        a.y -= ny * correction * b.mass;
+        b.x += nx * correction * a.mass;
+        b.y += ny * correction * a.mass;
+      }
+
+      const tx = -ny;
+      const ty = nx;
+
+      const v1n = a.vx * nx + a.vy * ny;
+      const v1t = a.vx * tx + a.vy * ty;
+      const v2n = b.vx * nx + b.vy * ny;
+      const v2t = b.vx * tx + b.vy * ty;
+
+      const restitution = 0.97;
+      const totalMass = a.mass + b.mass;
+      const v1nAfter = ((a.mass - b.mass) * v1n + 2 * b.mass * v2n) / totalMass;
+      const v2nAfter = ((b.mass - a.mass) * v2n + 2 * a.mass * v1n) / totalMass;
+
+      const v1nFinal = v1nAfter * restitution;
+      const v2nFinal = v2nAfter * restitution;
+
+      a.vx = tx * v1t + nx * v1nFinal;
+      a.vy = ty * v1t + ny * v1nFinal;
+      b.vx = tx * v2t + nx * v2nFinal;
+      b.vy = ty * v2t + ny * v2nFinal;
+    }
+
+    const bounds = { width: canvas.width, height: canvas.height };
+    const balls = [
+      new Ball({ x: 160, y: 160, radius: 22, color: "#ff355e", vx: 3.4, vy: 2.6 }),
+      new Ball({ x: 300, y: 120, radius: 28, color: "#3478f6", vx: -2.4, vy: 3.2, shape: "baseball" }),
+      new Ball({ x: 480, y: 280, radius: 24, color: "#53fcb2", vx: 2.6, vy: -2.8 }),
+      new Ball({ x: 640, y: 180, radius: 26, color: "#ffa552", vx: -3.1, vy: -2.3 }),
+      new Ball({ x: 720, y: 120, radius: 72, color: "#004f9e", vx: -2.2, vy: 3.1, shape: "logo" }),
+      new Ball({ x: 820, y: 340, radius: 34, color: "#ffffff", vx: 3.0, vy: 2.6, shape: "portrait" }),
+    ];
+
+    const SUB_STEPS = 8;
+    const COLLISION_ITERATIONS = 3;
+
+    function stepSimulation() {
+      const dt = 1 / SUB_STEPS;
+      for (let step = 0; step < SUB_STEPS; step += 1) {
+        balls.forEach(ball => ball.update(bounds, dt));
+
+        for (let iter = 0; iter < COLLISION_ITERATIONS; iter += 1) {
+          for (let i = 0; i < balls.length; i += 1) {
+            for (let j = i + 1; j < balls.length; j += 1) {
+              resolveBallCollision(balls[i], balls[j]);
+            }
+          }
+        }
+      }
+    }
+
+    function animate() {
+      ctx.clearRect(0, 0, bounds.width, bounds.height);
+      stepSimulation();
+      balls.forEach(ball => ball.draw(ctx));
+      requestAnimationFrame(animate);
+    }
+
+    animate();
+
+    const birthday = document.getElementById("birthday");
+    (function floatMessage() {
+      let phase = 0;
+      function step() {
+        phase += 0.025;
+        const x = canvas.offsetLeft + canvas.width / 2 - birthday.offsetWidth / 2 + Math.sin(phase * 1.5) * 120;
+        const y = canvas.offsetTop + canvas.height / 2 - birthday.offsetHeight / 2 + Math.cos(phase) * 40;
+        birthday.style.left = `${x}px`;
+        birthday.style.top = `${y}px`;
+        birthday.style.opacity = 0.7 + Math.sin(phase * 3) * 0.25;
+        birthday.style.transform = `scale(${0.98 + Math.sin(phase * 4) * 0.03})`;
+        requestAnimationFrame(step);
+      }
+      step();
+    }());
   </script>
 </body>
 </html>
-
